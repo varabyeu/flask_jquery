@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data storage</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <script>
+        $(document).ready(function() {
+
+        var MaxInputs       = 8; //maximum input boxes allowed
+        var InputsWrapper   = $("#InputsWrapper"); //Input boxes wrapper ID
+        var AddButton       = $("#AddMoreFileBox"); //Add button ID
+
+        var x = InputsWrapper.length;
+        var RowCount=1;
+
+        $(AddButton).click(function (e)  //on add input button click
+        {
+            RowCount++;
+            $(InputsWrapper).append('<div class="row"><p class="col-xs-6"><input type="text" placeholder="Enter your data" class="form-control add_list" name="data_input" id="field_'+ RowCount +'" value="Enter your data '+ RowCount +'"/></p><a href="#" class="btn btn-danger removeclass">×</a></div>');
+            x++;
+        return false;
+        });
+
+        $("body").on("click",".removeclass", function(e){
+            if( x > 1 ) {
+                $(this).parent('div').remove(); //remove text box
+                }
+        return false;
+        })
+        $('#submit').click(function(){
+            $.ajax({
+                url:"/post_item",
+                method:"POST",
+                data:$('#add_data').serialize(),
+                success:function(data)
+                {  alert(data)
+                     $('#resultbox').html(data);
+                     $('#add_data')[0].reset();
+                }
+            });
+            });
+        });
+    </script>
+    <style>
+    .row {padding:10px;}
+    </style>
+    <div class="container">
+        <br />
+        <br />
+        <h2 align="center">Please, input data above</h2><div id="resultbox"></div>
+        <div class="form-group">
+            <form name="add_data" id="add_data">
+                <div id="InputsWrapper">
+                    <div class="row">
+                     <div class="col-xs-6"><input type="text" name="data_input" placeholder="Enter your data" class="form-control add_list"></div>
+                     <div class="col-xs-6"><button type="button" name="add" id="AddMoreFileBox" class="btn btn-success">Add More</button></div>
+                    </div>
+                </div>
+                <br>
+                <input type="button" name="submit" id="submit" class="btn btn-info" value="Submit">
+            </form>
+        </div>
+        <a href="/items">Go to all results</a>
+    </div>
+
+</body>
+</html>
